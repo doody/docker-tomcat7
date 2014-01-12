@@ -9,19 +9,8 @@ RUN apt-get update
 RUN apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
 
-# Install expect & set password 'admin'
-RUN apt-get install -y expect
-
-RUN echo '#!/usr/bin/expect -f' > passwd.sh; \
-	echo "spawn passwd" >> passwd.sh; \
-	echo "expect {" >> passwd.sh; \
-	echo "password: {send \"admin\r\" ; exp_continue}" >> passwd.sh; \
-	echo "eof exit" >> passwd.sh; \
-	echo "}" >> passwd.sh
-
-RUN chmod +x passwd.sh; \
-	./passwd.sh; \
-	rm passwd.sh
+# Set password to 'admin'
+RUN printf admin\\nadmin\\n | passwd
 
 # Install libfuse2
 RUN apt-get install -y libfuse2
